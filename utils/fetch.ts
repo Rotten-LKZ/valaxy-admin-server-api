@@ -1,11 +1,18 @@
-import token from './token'
+import userInfo from './userInfo'
 
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE'
 
-export let BASE_URL = 'http://localhost:3000'
+interface Data {
+  [key: string]: any
+}
 
-export function sendRequest(url: string, method: Method, data: object = {}) {
-  url = BASE_URL + url
+export interface ApiResponse {
+  code: number
+  data: Data
+}
+
+export function useNativeFetch(url: string, method: Method, data: Data = {}): Promise<ApiResponse> {
+  url = `${localStorage.getItem('base_url')}${url}`
   return new Promise((resolve, reject) => {
     if (method === 'GET') {
       let _u = url
@@ -15,7 +22,7 @@ export function sendRequest(url: string, method: Method, data: object = {}) {
         method,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': token.get(),
+          'Authorization': userInfo.getToken(),
         },
       }).then((res) => {
         if (res.ok)
@@ -29,7 +36,7 @@ export function sendRequest(url: string, method: Method, data: object = {}) {
         method,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': token.get(),
+          'Authorization': userInfo.getToken(),
         },
         body: JSON.stringify(data),
       }).then((res) => {
