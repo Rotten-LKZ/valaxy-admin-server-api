@@ -46,4 +46,15 @@ async function del(filename: string): Promise<ApiReturn<DeleteArticleApi>> {
   return result.succ(resp.data as DeleteArticleApi)
 }
 
-export default { get, add, update, del }
+async function push(): Promise<ApiReturn<PushArticleApi>> {
+  let resp: ApiResponse
+  try {
+    resp = await useNativeFetch('/article/push', 'POST')
+  }
+  catch (e: any) {
+    return result.fail(e, { status: false })
+  }
+  return result.succ(resp.data as PushArticleApi)
+}
+
+export default { get, add, update, del, push }
