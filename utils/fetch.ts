@@ -48,3 +48,24 @@ export function useNativeFetch(url: string, method: Method, data: Data = {}): Pr
     }
   })
 }
+
+export function useMultiFetch(url: string, files: File[]): Promise<ApiResponse> {
+  url = `${localStorage.getItem('base_url')}${url}`
+  return new Promise((resolve, reject) => {
+    const formData = new FormData()
+    for (const file of files)
+      formData.append('pictures', file)
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: userInfo.getToken(),
+      },
+      body: formData,
+    }).then((res) => {
+      if (res.ok)
+        return res.json()
+      reject(res.statusText)
+    }).then(data => resolve(data))
+      .catch(err => reject(err))
+  })
+}
