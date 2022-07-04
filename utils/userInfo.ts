@@ -12,7 +12,7 @@ function save(token: string) {
 * 读取 token
 */
 function getToken() {
-  return get().token
+  return Cookies.get('token') || ''
 }
 
 /**
@@ -21,7 +21,6 @@ function getToken() {
 function get(): UserInfo {
   return {
     username: Cookies.get('username') || '',
-    token: Cookies.get('token') || '',
   }
 }
 
